@@ -68,7 +68,7 @@ class FacebookStream {
    */
   function StreamRequest($appid,$sesskey,$userid) {
     
-    $this->VerifyStream($_SESSION['fb_userid']);
+    $this->VerifyStream($userid);
     
     $hash = md5("app_id=".$appid."session_key=".$sesskey."source_id=".$userid.$this->getApiSecret());
     
