@@ -1,14 +1,29 @@
 <?php
-
-
+/*
+ *
+ * Facebook Streams http://facebookstreams.com
+ * 
+ * Brian Hendrickson (brian@megapump.com) http://brianhendrickson.com
+ *
+ * Basic lib to work with Facebook Streams API
+ *
+ */
+ 
+/* Facebook app ID */
 $app_id = "";
+
+/* Facebook app API key */
 $consumer_key = "";
+
+/* Facebook app secret key */
 $consumer_secret = "";
-$agent = '';
+
+/* User agent, example: "Twitteronia (curl) " */
+$agent = "";
 
 
 
-// require Facebook lib
+/* Load libraries */
 require_once "FacebookStream.php";
 require_once "Services/Facebook.php";
 
@@ -79,16 +94,16 @@ switch ($state) {
 
 <html>
   <head>
-    <title>Facebook Stream in PHP</title>
+    <title>Facebook Streams</title>
   </head>
   <body>
-    <h2>Welcome to a Facebook Stream PHP example.</h2>
-    <p>This site is a basic showcase of Facebook's new Stream.get method. Everything is saved in sessions. If you want to start over <a href='<?php echo $_SERVER['PHP_SELF']; ?>?test=clear'>clear sessions</a>.</p>
+    <h2>Welcome to a Facebook Streams PHP example.</h2>
+    <p>This site is a basic showcase of Facebook's new Streams method. Everything is saved in sessions. If you want to start over <a href='<?php echo $_SERVER['PHP_SELF']; ?>?test=clear'>clear sessions</a>.</p>
 
     <p>
-      Get the code powering this at <a href='http://github.com/voittos/facebookstream'>http://github.com/voittos/facebookstream</a>
+      Get the Facebook Streams code at <a href='http://github.com/voitto/facebook_stream'>http://github.com/voitto/facebook_stream</a>
       <br />
-      Read the documentation at <a href='https://docs.google.com/View?docID='>https://docs.google.com/View?docID=</a> 
+      Read the documentation at <a href='http://docs.google.com/Doc?id=dg9cvb8x_028vf5f6t'>http://docs.google.com/Doc?id=dg9cvb8x_028vf5f6t</a> 
     </p>
 
     <p><pre><?php print_r($content); ?><pre></p>

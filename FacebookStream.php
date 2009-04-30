@@ -1,13 +1,13 @@
 <?php
 /*
+ *
+ * Facebook Streams http://facebookstreams.com
+ * 
  * Brian Hendrickson (brian@megapump.com) http://brianhendrickson.com
  *
  * Basic lib to work with Facebook Streams API
  *
  */
-
-/* Load Facebook lib */
-require_once "Services/Facebook.php";
 
 /**
  * Facebook Stream class
