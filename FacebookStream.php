@@ -129,76 +129,27 @@ class FacebookStream {
     
   }
   
-  function VerifyStream($userid) {
-    
-    $perm = 'read_stream';
-    
-    $params = array(
-      'ext_perm' => $perm,
-      'uid' => $userid
-    );
-    
-    // optional URL-encoded GET parameters 
-    //  next
-    //  next_cancel
-    
-    $response = $this->api->users->callMethod('users.hasAppPermission', $params);
-    
-    if (!strpos($response->asXML(),"1</users_hasAppPermission")) {
-      $url = 'http://www.facebook.com/authorize.php';
-      $url .= '?api_key=';
-      $url .= $this->getApiKey();
-      $url .= '&v=1.0';
-      $url .= '&ext_perm=';
-      $url .= $perm;
-      header('Location:'.$url);
-      exit;
-    }
-    
+  function VerifyStream( $userid ) {
+    $this->VerifyPerm( $userid, 'read_stream' );
   }
 
-  function VerifyUpdate($userid) {
-    
-    $perm = 'status_update';
-    
-    $params = array(
-      'ext_perm' => $perm,
-      'uid' => $userid
-    );
-    
-    // optional URL-encoded GET parameters 
-    //  next
-    //  next_cancel
-    
-    $response = $this->api->users->callMethod('users.hasAppPermission', $params);
-    
-    if (!strpos($response->asXML(),"1</users_hasAppPermission")) {
-      $url = 'http://www.facebook.com/authorize.php';
-      $url .= '?api_key=';
-      $url .= $this->getApiKey();
-      $url .= '&v=1.0';
-      $url .= '&ext_perm=';
-      $url .= $perm;
-      header('Location:'.$url);
-      exit;
-    }
-    
+  function VerifyUpdate( $userid ) {
+    $this->VerifyPerm( $userid, 'status_update' );
+  }
+
+  function VerifyOffline( $userid ) {
+    $this->VerifyPerm( $userid, 'offline_access' );
   }
 
   function VerifyPerm($userid,$perm) {
-    
     $params = array(
       'ext_perm' => $perm,
       'uid' => $userid
     );
-    
-    // optional URL-encoded GET parameters 
-    //  next
-    //  next_cancel
-    
     $response = $this->api->users->callMethod('users.hasAppPermission', $params);
-    
-    if (!strpos($response->asXML(),"1</users_hasAppPermission")) {
+    $xml = simplexml_load_string($response->asXML());
+    $xml = (array) $xml;
+    if (!$xml[0]){
       $url = 'http://www.facebook.com/authorize.php';
       $url .= '?api_key=';
       $url .= $this->getApiKey();
@@ -208,7 +159,6 @@ class FacebookStream {
       header('Location:'.$url);
       exit;
     }
-    
   }
   
   function setStatus($status,$userid) {
@@ -225,10 +175,6 @@ class FacebookStream {
     } else {
       $params['status'] = $status;
     }
-    
-    // optional URL-encoded GET parameters 
-    //  next
-    //  next_cancel
     
     $response = $this->api->users->callMethod('users.setStatus', $params);
     
