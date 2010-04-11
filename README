@@ -8,3 +8,6 @@ Brian Hendrickson | brian@megapump.com | http://brianhendrickson.com | @brianjes
 Basic PHP library for working with Facebook's streams API
 
 Docs: http://docs.google.com/Doc?id=dg9cvb8x_028vf5f6t
+
+4/10/2010 -- updating Facebook Stream library to use an "infinite session key"
+
