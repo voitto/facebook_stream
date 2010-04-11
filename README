@@ -11,3 +11,20 @@ Docs: http://docs.google.com/Doc?id=dg9cvb8x_028vf5f6t
 
 4/10/2010 -- updating Facebook Stream library to use an "infinite session key"
 
+Here's something useful to add from the OpenMicroBlogger README
+
+Setting the Facebook callback URL:
+  
+  1. http://www.facebook.com/developers/apps.php
+  2. click "Edit Settings"
+  3. click "Connect"
+
+Getting a permanent key from Facebook:
+
+http://www.facebook.com/code_gen.php?v=1.0&api_key=[api key]
+
+That will give you a "one time code"
+
+Visit this URL in the example app to convert the one time code to a permanent session key:
+
+?key=[one time code]

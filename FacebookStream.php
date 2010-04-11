@@ -40,7 +40,7 @@ class FacebookStream {
    */
   function setSess($s){
 	  $this->api->sessionKey = $s; 
-  }  
+  }
 
   /**
    * Make a Request token
@@ -69,6 +69,21 @@ class FacebookStream {
   function getSession($token) { 
     return $this->api->auth->getSession($token);
   }
+
+  /**
+   * get a permanent session key
+   */
+	function permanent_facebook_key($key,$secret){
+	  add_lib_path('facebook-platform/php');
+	  require_once "facebook.php";
+	  $facebook = new Facebook($key, $secret);
+	  $infinite_key_array = $facebook->api_client->auth_getSession($_GET['key']);
+	  if ($infinite_key_array['session_key'])
+	    echo "your permanent session key is ". $infinite_key_array['session_key'];
+	  else
+	    echo "sorry there was an error getting your permanent session key";
+	  exit;
+	}
   
   /**
    * Facebook Stream API request
@@ -289,6 +304,23 @@ class FacebookStream {
 		$sig  .= $this->getApiSecret();
 		$params['sig'] = md5($sig);
 		return $params;
-  }	
-	
+  }
+
+}
+
+function add_lib_path($path,$prepend = false) {
+   if (!file_exists($path) OR (file_exists($path) && filetype($path) !== 'dir'))
+   {
+       trigger_error("Include path '{$path}' not exists", E_USER_WARNING);
+       continue;
+   }
+   
+   $paths = explode(PATH_SEPARATOR, get_include_path());
+   
+   if (array_search($path, $paths) === false && $prepend)
+       array_unshift($paths, $path);
+   if (array_search($path, $paths) === false)
+       array_push($paths, $path);
+   
+   set_include_path(implode(PATH_SEPARATOR, $paths));
 }
