@@ -79,7 +79,7 @@ switch ($state) {
     if ( !empty( $infinite_session ) && ( $_SESSION['fb_userid'] > 0 )) {
 
 	    /* Infinite session, headless mode, use FB UserID from database to skip to the API call */
-	    $_SESSION['fb_session'] = $infinite_session;
+	    $fs->StreamRequest( $appid, $infinite_session, $_SESSION['fb_userid'] );
 	
     } elseif ($_SESSION['fb_session'] === NULL && $_SESSION['fb_userid'] === NULL) {
       
@@ -109,6 +109,9 @@ switch ($state) {
     <title>Facebook Streams</title>
   </head>
   <body>
+
+	  <?php $fs->showJs(); ?> 
+
     <h2>Welcome to a Facebook Streams PHP example.</h2>
     <p>This site is a basic showcase of Facebook's new Streams method. Everything is saved in sessions. If you want to start over <a href='<?php echo $_SERVER['PHP_SELF']; ?>?test=clear'>clear sessions</a>.</p>
 
@@ -118,7 +121,12 @@ switch ($state) {
       Read the documentation at <a href='http://docs.google.com/Doc?id=dg9cvb8x_028vf5f6t'>http://docs.google.com/Doc?id=dg9cvb8x_028vf5f6t</a> 
     </p>
 
-    <p><pre><?php print_r($content); ?><pre></p>
+    <p>
+
+    <?php $fs->verifyPerms(array('offline_access','status_update','read_mailbox'),$_SESSION['fb_userid']); ?>
+
+
+</p>
 
   </body>
 </html>

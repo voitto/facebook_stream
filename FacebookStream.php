@@ -90,7 +90,7 @@ class FacebookStream {
    */
   function StreamRequest($appid,$sesskey,$userid) {
     
-    $this->VerifyStream($userid);
+    //$this->verifyPerms(array('read_stream'),$userid);
     
     $hash = md5("app_id=".$appid."session_key=".$sesskey."source_id=".$userid.$this->getApiSecret());
     
@@ -129,42 +129,31 @@ class FacebookStream {
     
   }
   
-  function VerifyStream( $userid ) {
-    $this->VerifyPerm( $userid, 'read_stream' );
-  }
+  function verifyPerms($perms,$userid) {
 
-  function VerifyUpdate( $userid ) {
-    $this->VerifyPerm( $userid, 'status_update' );
-  }
+	  $showperms = array();
 
-  function VerifyOffline( $userid ) {
-    $this->VerifyPerm( $userid, 'offline_access' );
-  }
-
-  function VerifyPerm($userid,$perm) {
-    $params = array(
-      'ext_perm' => $perm,
-      'uid' => $userid
-    );
-    $response = $this->api->users->callMethod('users.hasAppPermission', $params);
-    $xml = simplexml_load_string($response->asXML());
-    $xml = (array) $xml;
-    if (!$xml[0]){
-      $url = 'http://www.facebook.com/authorize.php';
-      $url .= '?api_key=';
-      $url .= $this->getApiKey();
-      $url .= '&v=1.0';
-      $url .= '&ext_perm=';
-      $url .= $perm;
-      header('Location:'.$url);
-      exit;
+	  foreach($perms as $perm){
+	    $params = array(
+	      'ext_perm' => $perm,
+	      'uid' => $userid
+	    );
+	    $response = $this->api->users->callMethod('users.hasAppPermission', $params);
+	    $xml = simplexml_load_string($response->asXML());
+	    if (is_object($xml))
+	      $xml = (array) $xml;
+	    if (!$xml[0])
+		    $showperms[] = $perm;
     }
+
+    if (count($showperms) > 0)
+      $this->showPopup(implode(',',$showperms));
+
   }
   
   function setStatus($status,$userid) {
     
-    $this->VerifyUpdate($userid);
-    $this->VerifyPerm($userid,'photo_upload');
+    //$this->verifyPerms(array('status_update','photo_upload'),$userid);
     
     $params = array(
       'uid' => $userid,
@@ -184,9 +173,7 @@ class FacebookStream {
 
   function PhotoUpload( $file, $aid=0, $caption='',$userid ) {
     
-    $this->VerifyUpdate($userid);
-    
-    $this->VerifyPerm($userid,'photo_upload');
+    //$this->verifyPerms(array('status_update','photo_upload'),$userid);
 	  
 	  $params = array(
 	    'method' => 'photos.upload',
@@ -250,6 +237,31 @@ class FacebookStream {
 		$sig  .= $this->getApiSecret();
 		$params['sig'] = md5($sig);
 		return $params;
+  }
+
+  function showJs(){
+
+		echo <<<EOD
+      <script src="http://static.ak.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
+EOD;
+
+  }
+
+  function showPopup($perms){
+	
+    $key = $this->getApiKey();
+
+		echo <<<EOD
+			<script type="text/javascript"> 
+				FB_RequireFeatures(["XFBML"], function(){ 
+				FB.Facebook.init('$key', 'xd_receiver.htm', null);
+				FB.ensureInit(function () { 
+					FB.Connect.showPermissionDialog('$perms', function(accepted) { window.close(); } )
+				});
+			});
+			</script>
+EOD;
+
   }
 
 }
